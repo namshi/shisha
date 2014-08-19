@@ -2,10 +2,12 @@
 
 var assert = require('assert');
 var mockserver = require('mockserver');
-var shisha = require('../');
+var shisha = require('../shisha');
+var http = require('http');
 
 describe('Shisha',function(){
 	it('should be a valid node module', function(){
+		console.log(shisha);
 		assert.equal(typeof shisha, 'object');
 	});
 	// it('should be able to use command line arguments', function(){});
