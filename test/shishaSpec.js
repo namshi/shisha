@@ -7,7 +7,6 @@ var http = require('http');
 
 describe('Shisha',function(){
 	it('should be a valid node module', function(){
-		console.log(shisha);
 		assert.equal(typeof shisha, 'object');
 	});
 	// it('should be able to use command line arguments', function(){});
@@ -15,28 +14,49 @@ describe('Shisha',function(){
 
 describe('Shisha: parser',function(){
 	it('should be throw an error if there is no .smokefile', function(){
-		shisha.use('./nosmokefile');
+		shisha.use('./test/nosmokefile');
 		assert.throws(function(){
 			var config = shisha.parse();
-		}, '.smokefile not found');
+		}, function(error){
+            return /\.smokefile not found/.test(error);
+        });
 	});
 
 	it('should be throw an error if the .smokefile has invalid syntax', function(){
-		shisha.use('./invalidsmokefile');
+		shisha.use('./test/invalidsmokefile');
 		assert.throws(function(){
 			var config = shisha.parse();
-		}, '.smokefile is invalid');
+		}, function(error){
+            return /\.smokefile is invalid/.test(error);
+        });
 	});
 
 	it('should be able to parse a .smokefile to an object', function(){
-		shisha.use('./validsmokefile');
+		shisha.use('./test/validsmokefile');
 		var config = shisha.parse();
 		assert.equal(typeof config, 'object');
-		assert.equal(config, {
-			'url1' : 200,
-			'url2' : 404,
-			'url3' : 200
-		});
+        assert.deepEqual(config,
+            [
+                {
+                    "hostname": "127.0.0.1",
+                    "port":     "9001",
+                    "urls": {
+                        "url1" : 200,
+                        "url2" : 404,
+                        "url3" : 200
+                    }
+                },
+                {
+                    "hostname": "127.0.0.1",
+                    "port":     "9001",
+                    "urls": {
+                        "url4" : 200,
+                        "url5" : 404,
+                        "url6" : 200
+                    }
+                }
+            ]
+        );
 	});
 });
 
@@ -52,18 +72,21 @@ describe('Shisha: smoke tests',function(){
 
 	it('should be able to request all the urls from the smokefile object', function(){
 		shisha.use('./validsmokefile');
-		var output = shisha.smoke();
-		assert.equal(output,{
-			'message': 'all good'
-		});
+		shisha.smoke(function(output){
+            assert.deepEqual(output,{
+                'message': 'all good!'
+            });
+        });
+
 	});
 
 	it('should be able to request all the urls from the smokefile object', function(){
 		shisha.use('./	');
-		var output = shisha.smoke();
-		assert.equal(output,{
-			'message': 'all good'
-		});
+        shisha.smoke(function(output){
+            assert.deepEqual(output,{
+                'message': 'some errors :('
+            });
+        });
 	});
 });
 

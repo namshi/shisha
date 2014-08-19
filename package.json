@@ -2,7 +2,7 @@
   "name": "shisha",
   "version": "0.1.0",
   "description": "Simple smoke testing library in NodeJS",
-  "main": "index.js",
+  "main": "shisha.js",
   "scripts": {
     "test": "mocha"
   },
