@@ -63,6 +63,9 @@ describe('Shisha: parser',function(){
 describe('Shisha: smoke tests',function(){
 	var server;
 	before(function(){
+		if(server){
+			server.close();
+		}
 		server = http.createServer(mockserver('mocks')).listen(9001);
 	});
 
@@ -71,21 +74,16 @@ describe('Shisha: smoke tests',function(){
 	});
 
 	it('should be able to request all the urls from the smokefile object', function(){
-		shisha.use('./validsmokefile');
+		shisha.use('./test/validsmokefile');
 		shisha.smoke(function(output){
-            assert.deepEqual(output,{
-                'message': 'all good!'
-            });
+            assert.equal(output.message,'Smoke test passed!');
         });
-
 	});
 
-	it('should be able to request all the urls from the smokefile object', function(){
-		shisha.use('./	');
-        shisha.smoke(function(output){
-            assert.deepEqual(output,{
-                'message': 'some errors :('
-            });
+	it('should be able to report when ever the smoke test failed', function(){
+		shisha.use('./test/invalidsmokefile-with-errors');
+		shisha.smoke(function(output){
+            assert.equal(output.message,'Smoke test failed!');
         });
 	});
 });
