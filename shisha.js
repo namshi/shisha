@@ -11,10 +11,12 @@ var http = require('http');
 
 var shisha = {
     directory: '.',
-    use: function (directory) {
+    use:       function (directory)
+    {
         this.directory = directory;
     },
-    parse: function () {
+    parse:     function ()
+    {
         var parseData;
         if (!fs.existsSync(shisha.directory + '/.smokefile')) {
             throw new Error('.smokefile not found');
@@ -28,7 +30,8 @@ var shisha = {
         return parseData;
 
     },
-    smoke: function (callback) {
+    smoke:     function (callback)
+    {
         var report = {},
             data = shisha.parse(),
             message = 'Smoke test passed!',
@@ -49,20 +52,23 @@ var shisha = {
 
                 http.get({
                     hostname: hostname,
-                    port: port,
-                    path: url
-                }, function (res) {
-                    if (urls[url] !== res.statusCode) {
-                        report[hostname + ':' + port + '/' + url] = 'fail';
-                        message = 'Smoke test failed!';
-                    } else {
-                        report[hostname + ':' + port + '/' + url] = 'pass';
+                    port:     port,
+                    path:     url
+                }, (function (url, urlsCount){
+                    return function (res)
+                    {
+                        if (urls[url] !== res.statusCode) {
+                            report[hostname + ':' + port + url] = 'fail';
+                            message = 'Smoke test failed!';
+                        } else {
+                            report[hostname + ':' + port + url] = 'pass';
+                        }
+                        if (Object.keys(report).length === urlsCount) {
+                            report.message = message;
+                            callback(report);
+                        }
                     }
-                    if (Object.keys(report).length === urlsCount) {
-                        report.message = message;
-                        callback(report);
-                    }
-                });
+                })(url, urlsCount));
             }
         }
     }

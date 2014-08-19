@@ -41,18 +41,18 @@ describe('Shisha: parser',function(){
                     "hostname": "127.0.0.1",
                     "port":     "9001",
                     "urls": {
-                        "url1" : 200,
-                        "url2" : 404,
-                        "url3" : 200
+                        "/return-200" : 200,
+                        "/return-404" : 404,
+                        "/return-500" : 500
                     }
                 },
                 {
                     "hostname": "127.0.0.1",
                     "port":     "9001",
                     "urls": {
-                        "url4" : 200,
-                        "url5" : 404,
-                        "url6" : 200
+                        "/return-200" : 200,
+                        "/return-404" : 404,
+                        "/return-500" : 500
                     }
                 }
             ]
@@ -66,7 +66,7 @@ describe('Shisha: smoke tests',function(){
 		if(server){
 			server.close();
 		}
-		server = http.createServer(mockserver('mocks')).listen(9001);
+		server = http.createServer(mockserver('./test/mocks')).listen(9001);
 	});
 
 	after(function(){
