@@ -38,21 +38,21 @@ describe('Shisha: parser',function(){
         assert.deepEqual(config,
             [
                 {
-                    "hostname": "127.0.0.1",
-                    "port":     "9001",
-                    "urls": {
-                        "/return-200" : 200,
-                        "/return-404" : 404,
-                        "/return-500" : 500
+                    'hostname': '127.0.0.1',
+                    'port':     '9001',
+                    'urls': {
+                        '/return-200' : 200,
+                        '/return-404' : 404,
+                        '/return-500' : 500
                     }
                 },
                 {
-                    "hostname": "127.0.0.1",
-                    "port":     "9001",
-                    "urls": {
-                        "/return-200" : 200,
-                        "/return-404" : 404,
-                        "/return-500" : 500
+                    'hostname': '127.0.0.1',
+                    'port':     '9001',
+                    'urls': {
+                        '/return-200' : 200,
+                        '/return-404' : 404,
+                        '/return-500' : 500
                     }
                 }
             ]
@@ -70,20 +70,22 @@ describe('Shisha: smoke tests',function(){
 	});
 
 	after(function(){
-		server.close()
+		server.close();
 	});
 
-	it('should be able to request all the urls from the smokefile object', function(){
+	it('should be able to request all the urls from the smokefile object', function(done){
 		shisha.use('./test/validsmokefile');
 		shisha.smoke(function(output){
             assert.equal(output.message,'Smoke test passed!');
+            done();
         });
 	});
 
-	it('should be able to report when ever the smoke test failed', function(){
+	it('should be able to report when ever the smoke test failed', function(done){
 		shisha.use('./test/invalidsmokefile-with-errors');
 		shisha.smoke(function(output){
             assert.equal(output.message,'Smoke test failed!');
+            done();
         });
 	});
 });
