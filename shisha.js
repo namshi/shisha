@@ -17,9 +17,11 @@ var shisha = {
     },
     parse: function () {
         var parseData;
+
         if (!fs.existsSync(shisha.directory + '/.smokefile')) {
             throw new Error('.smokefile not found');
         }
+
         try {
             parseData = JSON.parse(fs.readFileSync(shisha.directory + '/.smokefile'));
         } catch (e) {
@@ -27,46 +29,45 @@ var shisha = {
         }
 
         return parseData;
-
     },
     smoke: function (callback) {
         var report = {},
             data = shisha.parse(),
             message = 'Smoke test passed!',
             urlsCount = 0,
-            hostname,
-            port,
-            urls,
-            addToReport = function (url) {
+
+            addToReport = function (data, url, urlIndex) {
                 return function (res) {
+                    var hostname = data.hostname,
+                        port = data.port,
+                        urls = data.urls;
+
                     if (urls[url] !== res.statusCode) {
-                        report[hostname + ':' + port + url] = 'fail';
+                        report[hostname + ':' + port + url + '_' + urlIndex] = 'fail';
                         message = 'Smoke test failed!';
                     } else {
-                        report[hostname + ':' + port + url] = 'pass';
+                        report[hostname + ':' + port + url + '_' + urlIndex] = 'pass';
                     }
+
                     if (Object.keys(report).length === urlsCount) {
                         report.message = message;
                         callback(report);
                     }
                 };
+            },
+
+            processSmokeData = function (data) {
+                for (var url in data.urls) {
+                    http.get({
+                        hostname: data.hostname,
+                        port: data.port,
+                        path: url
+                    }, addToReport(data, url, ++urlsCount));
+                }
             };
 
         for (var i = 0; i < data.length; i++) {
-            hostname = data[i].hostname;
-            port = data[i].port;
-            urls = data[i].urls;
-
-            for (var url in urls) {
-
-                urlsCount++;
-
-                http.get({
-                    hostname: hostname,
-                    port: port,
-                    path: url
-                }, addToReport(url));
-            }
+            processSmokeData(data[i]);
         }
     }
 };

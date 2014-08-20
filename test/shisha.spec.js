@@ -82,7 +82,7 @@ describe('Shisha: smoke tests',function(){
 	});
 
 	it('should be able to report when ever the smoke test failed', function(done){
-		shisha.use('./test/invalidsmokefile-with-errors');
+		shisha.use('./test/validsmokefile-with-errors');
 		shisha.smoke(function(output){
             assert.equal(output.message,'Smoke test failed!');
             done();
