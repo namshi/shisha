@@ -1,12 +1,28 @@
-
-var replacePlaceholders = function(data, placeholders) {
-    for(var placeholder in placeholders) {
-        data = data.split('{{' + placeholder + '}}').join(placeholders[placeholder]);
+/**
+ * Renders data with locals
+ *
+ * @param data
+ * @param locals
+ * @returns {*}
+ */
+var render = function(data, locals) {
+    for(var local in locals) {
+        data = data.split('{{' + local+ '}}').join(locals[local]);
     }
 
     return data;
 };
 
+/**
+ * Builds the parsed object from rawData in the following form:
+ * {
+ *      url: 'urlToTest',
+ *      status: 'expectedStatusCode'
+ * }
+ *
+ * @param rawData
+ * @returns {{url: *, status: *}}
+ */
 var buildParsedObject = function(rawData){
     var linkStatusCode = rawData.split(' ');
 
@@ -21,11 +37,31 @@ var buildParsedObject = function(rawData){
 };
 
 var parser = {
-    parse: function(rawData, placeholders) {
+    /**
+     * Parses rawData by rendering locals and constructing
+     * the testing array
+     *
+     * [
+     *      {
+     *          url: 'urlToTest',
+     *          status: 'expectedStatusCode'
+     *      },
+     *      {
+     *          ....
+     *      },
+     *
+     *      ....
+     * ]
+     *
+     * @param rawData
+     * @param locals
+     * @returns {Array}
+     */
+    parse: function(rawData, locals) {
         var parsedData = [];
 
-        if (Object.keys(placeholders).length > 0) {
-            rawData = replacePlaceholders(rawData, placeholders);
+        if (Object.keys(locals).length > 0) {
+            rawData = render(rawData, locals);
         }
 
         rawData = rawData.split('\n');
