@@ -11,7 +11,7 @@ for (var local in argv) {
     locals[local] = argv[local];
 }
 
-var shishaFile = argv.smoke || (process.cwd + '/.shishafile');
+var shishaFile = argv.smoke || (process.cwd + '/.smoke');
 
 try {
     var exitStatus = 0;

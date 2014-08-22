@@ -12,7 +12,7 @@ describe('Shisha',function(){
 });
 
 describe('Shisha: parser',function(){
-	it('should be throw an error if there is no .shishafile', function(){
+	it('should be throw an error if there is no .smoke', function(){
         var f = false;
 
         try {
@@ -26,11 +26,11 @@ describe('Shisha: parser',function(){
             assert.fail(null, null, 'This should not be called');
         }
 	});
-    it('should be throw an error if the .shishafile has invalid syntax', function(){
+    it('should be throw an error if the .smoke has invalid syntax', function(){
         var f = false;
 
         try {
-            shisha.smoke('./test/invalidshishafile/.shishafile', {domain: '127.0.0.1:9001'}, function(){});
+            shisha.smoke('./test/invalidshishafile/.smoke', {domain: '127.0.0.1:9001'}, function(){});
             f = true;
         } catch (e) {
             assert.equal(e.message, 'Invalid config file');
@@ -56,7 +56,7 @@ describe('Shisha: smoke tests',function(){
 	});
 
     it('should be able to report when ever the smoke test failed', function(done){
-        shisha.smoke('./test/validshishafile-with-errors/.shishafile', {domain: '127.0.0.1:9001'}, function(output){
+        shisha.smoke('./test/validshishafile-with-errors/.smoke', {domain: '127.0.0.1:9001'}, function(output){
             var keys = Object.keys(output);
             assert.equal(output[keys].result, false);
             done();
@@ -64,7 +64,7 @@ describe('Shisha: smoke tests',function(){
     });
 
 	it('should be able to request all the urls from the shisha object', function(done){
-		shisha.smoke('./test/validshishafile/.shishafile', {domain: '127.0.0.1:9001'}, function(output){
+		shisha.smoke('./test/validshishafile/.smoke', {domain: '127.0.0.1:9001'}, function(output){
             for (var url in output) {
                 assert.equal(output[url].result, true);
             }
