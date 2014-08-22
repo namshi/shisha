@@ -60,14 +60,6 @@ Then, you will have access to the `smoke` method, that accepts following argumen
 * a list of locals to replace in the smoke file: `{ domain1: 'example.org' }`
 * a callback that is triggered when the smoke tests are completed.
 
-If you are into promises, simply do not pass `callback` and shisha should return a promise
-back to you!
-
-``` javascript
-shisha.smoke('./path/to/.smoke', {domain: 'example.org'}).then(function(report){
-    console.log(report);
-});`
-```
 If you do not have any locals, you can call `shisha.smoke(filePath, callback)`.
 
 # Tests
