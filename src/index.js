@@ -24,7 +24,7 @@ var shisha = {
      * @param callback
      */
     smoke: function (shishaFile, locals, callback) {
-        var report = {},
+        var report = [],
             data = parse(shishaFile, locals),
             urlsCount = 0,
             /**
@@ -37,11 +37,12 @@ var shisha = {
              */
             addToReport = function (url, status) {
                 return function (res) {
-                    report[url] = {
+                    report.push({
+                        url: url,
                         expected: status,
                         actual: res.statusCode,
                         result: status === res.statusCode.toString()
-                    };
+                    });
 
                     if (Object.keys(report).length === data.length) {
                         callback(report);

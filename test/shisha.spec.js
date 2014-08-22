@@ -72,4 +72,13 @@ describe('Shisha: smoke tests',function(){
             done();
         });
 	});
+
+    it('should be able to request many urls from the shisha object', function(done){
+        shisha.smoke(path.join('test', 'validshishafile', '.smoke50'), {domain: '127.0.0.1:9001'}, function(output){
+            for (var url in output) {
+                assert.equal(output[url].result, true);
+            }
+            done();
+        });
+    });
 });

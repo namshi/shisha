@@ -18,9 +18,8 @@ try {
     var exitStatus = 0;
 
     shisha.smoke(shishaFile, locals, function(report) {
-        for(var url in report) {
-            var test = report[url];
 
+        report.forEach(function(test) {
             if (!test.result) {
                 exitStatus = 1;
             }
@@ -28,12 +27,12 @@ try {
             var method = test.result ? 'green' : 'red';
 
             console.log('{url} (expected: {expected}, actual: {actual})'
-                .replace('{url}', url)
+                .replace('{url}', test.url)
                 .replace('{expected}', test.expected)
                 .replace('{actual}', test.actual)
                 [method]
             );
-        }
+        });
 
         process.exit(exitStatus);
 });
