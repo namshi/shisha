@@ -63,7 +63,7 @@ Then, you will have access to the `smoke` method, that accepts following argumen
 If you are into promises, simply do not pass `callback` and shisha should return a promise
 back to you!
 
-```
+``` javascript
 shisha.smoke('./path/to/.smoke', {domain: 'example.org'}).then(function(report){
     console.log(report);
 });`
