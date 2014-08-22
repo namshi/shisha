@@ -1,6 +1,6 @@
 {
   "name": "shisha",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Simple smoke testing library in NodeJS",
   "main": "src/index.js",
   "bin": {
