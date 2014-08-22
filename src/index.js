@@ -4,20 +4,14 @@ var loader = require('./loader');
 var parser = require('./parser');
 
 var shisha = {
-    directory: null,
-    placeholders: {},
-    use: function (directory, placeholders) {
-        this.directory = directory;
-        this.placeholders = placeholders;
-    },
-    parse: function () {
-        var rawData = loader.load(this.directory);
+    parse: function (shishaFile, locals) {
+        var rawData = loader.load(shishaFile);
 
-        return parser.parse(rawData, this.placeholders);
+        return parser.parse(rawData, locals);
     },
-    smoke: function (callback) {
+    smoke: function (shishaFile, locals, callback) {
         var report = {},
-            data = shisha.parse(),
+            data = shisha.parse(shishaFile, locals),
             urlsCount = 0,
             addToReport = function (url, status) {
                 return function (res) {

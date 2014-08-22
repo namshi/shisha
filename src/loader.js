@@ -1,12 +1,8 @@
 var fs = require('fs');
 
 var loader = {
-    load: function(path) {
-        if (!fs.existsSync(path + '/.shishafile')) {
-            throw new Error('.shishafile not found');
-        }
-
-        return fs.readFileSync(path + '/.shishafile', {encoding: 'utf8'});
+    load: function(filePath) {
+        return fs.readFileSync(filePath, {encoding: 'utf8'});
     }
 };
 

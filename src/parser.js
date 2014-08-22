@@ -11,7 +11,7 @@ var buildParsedObject = function(rawData){
     var linkStatusCode = rawData.split(' ');
 
     if (linkStatusCode.length !== 2) {
-        throw new Error('.shishafile is invalid');
+        throw new Error('Invalid config file');
     }
 
     return {
@@ -31,7 +31,7 @@ var parser = {
         rawData = rawData.split('\n');
 
         if (rawData.length === 0) {
-            throw new Error('.shishafile is invalid');
+            throw new Error('Invalid config file');
         }
 
         for(var i = 0; i < rawData.length; i++) {

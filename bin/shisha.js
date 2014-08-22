@@ -3,25 +3,20 @@
 
 var argv = require('yargs').argv;
 var colors = require('colors');
-
 var shisha = require('./../src/index');
 
-var ph = {};
+var locals = {};
 
-for (var placeholder in argv) {
-    ph[placeholder] = argv[placeholder];
+for (var local in argv) {
+    locals[local] = argv[local];
 }
 
-colors.setTheme({
-    info: 'green',
-    error: 'red'
-});
+var shishaFile = argv.smoke || (process.cwd + '/.shishafile');
 
-shisha.use(argv.directory || process.cwd(), ph);
 try {
     var exitStatus = 0;
 
-    shisha.smoke(function(report) {
+    shisha.smoke(shishaFile, locals, function(report) {
         for(var url in report) {
             var test = report[url];
 
@@ -29,7 +24,7 @@ try {
                 exitStatus = 1;
             }
 
-            var method = test.result ? 'info' : 'error';
+            var method = test.result ? 'green' : 'red';
 
             console.log('{url} (expected: {expected}, actual: {actual})'
                 .replace('{url}', url)

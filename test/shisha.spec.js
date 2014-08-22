@@ -13,44 +13,33 @@ describe('Shisha',function(){
 
 describe('Shisha: parser',function(){
 	it('should be throw an error if there is no .shishafile', function(){
-		shisha.use('./test/noshishafile', {domain: '127.0.0.1:9001'});
-		assert.throws(function(){
-			var config = shisha.parse();
-		}, function(error){
-            return /\.shishafile not found/.test(error);
-        });
-	});
+        var f = false;
 
-	it('should be throw an error if the .shishafile has invalid syntax', function(){
-		shisha.use('./test/invalidshishafile', {domain: '127.0.0.1:9001'});
-		assert.throws(function(){
-			var config = shisha.parse();
-		}, function(error){
-            return /\.shishafile is invalid/.test(error);
-        });
-	});
+        try {
+            shisha.smoke('./test/noshishafile/.test', {domain: '127.0.0.1:9001'});
+            f = true;
+        } catch (e) {
+            assert.equal(e.code, 'ENOENT');
+        }
 
-	it('should be able to parse a .shishafile to an object', function(){
-		shisha.use('./test/validshishafile', {domain: '127.0.0.1:9001'});
-		var config = shisha.parse();
-		assert.equal(typeof config, 'object');
-        assert.deepEqual(config,
-            [
-                {
-                    url: 'http://127.0.0.1:9001/return-200',
-                    status: 200
-                },
-                {
-                    url: 'http://127.0.0.1:9001/return-404',
-                    status: 404
-                },
-                {
-                    url: 'http://127.0.0.1:9001/return-500',
-                    status: 500
-                }
-            ]
-        );
+        if (f) {
+            assert.fail(null, null, 'This should not be called');
+        }
 	});
+    it('should be throw an error if the .shishafile has invalid syntax', function(){
+        var f = false;
+
+        try {
+            shisha.smoke('./test/invalidshishafile/.shishafile', {domain: '127.0.0.1:9001'}, function(){});
+            f = true;
+        } catch (e) {
+            assert.equal(e.message, 'Invalid config file');
+        }
+
+        if (f) {
+            assert.fail(null, null, 'This should not be called');
+        }
+    });
 });
 
 describe('Shisha: smoke tests',function(){
@@ -67,8 +56,7 @@ describe('Shisha: smoke tests',function(){
 	});
 
     it('should be able to report when ever the smoke test failed', function(done){
-        shisha.use('./test/validshishafile-with-errors', {domain: '127.0.0.1:9001'});
-        shisha.smoke(function(output){
+        shisha.smoke('./test/validshishafile-with-errors/.shishafile', {domain: '127.0.0.1:9001'}, function(output){
             var keys = Object.keys(output);
             assert.equal(output[keys].result, false);
             done();
@@ -76,8 +64,7 @@ describe('Shisha: smoke tests',function(){
     });
 
 	it('should be able to request all the urls from the shisha object', function(done){
-		shisha.use('./test/validshishafile', {domain: '127.0.0.1:9001'});
-		shisha.smoke(function(output){
+		shisha.smoke('./test/validshishafile/.shishafile', {domain: '127.0.0.1:9001'}, function(output){
             for (var url in output) {
                 assert.equal(output[url].result, true);
             }
