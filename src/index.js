@@ -24,6 +24,11 @@ var shisha = {
      * @param callback
      */
     smoke: function (shishaFile, locals, callback) {
+        if (!callback) {
+            callback = locals;
+            locals = {};
+        }
+
         var report = [],
             data = parse(shishaFile, locals),
             urlsCount = 0,

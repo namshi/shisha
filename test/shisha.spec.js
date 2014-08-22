@@ -81,4 +81,13 @@ describe('Shisha: smoke tests',function(){
             done();
         });
     });
+
+    it('should be able to request urls from the shisha object wo locals', function(done){
+        shisha.smoke(path.join('test', 'validshishafile', '.smokewolocals'), function(output){
+            for (var url in output) {
+                assert.equal(output[url].result, true);
+            }
+            done();
+        });
+    });
 });
