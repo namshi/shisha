@@ -4,6 +4,7 @@ var assert = require('assert');
 var mockserver = require('mockserver');
 var shisha = require('../src/index');
 var http = require('http');
+var path = require('path');
 
 describe('Shisha',function(){
 	it('should be a valid node module', function(){
@@ -16,7 +17,7 @@ describe('Shisha: parser',function(){
         var f = false;
 
         try {
-            shisha.smoke('./test/noshishafile/.test', {domain: '127.0.0.1:9001'});
+            shisha.smoke(path.join('test', 'noshishafile', '.test'), {domain: '127.0.0.1:9001'});
             f = true;
         } catch (e) {
             assert.equal(e.code, 'ENOENT');
@@ -30,7 +31,7 @@ describe('Shisha: parser',function(){
         var f = false;
 
         try {
-            shisha.smoke('./test/invalidshishafile/.smoke', {domain: '127.0.0.1:9001'}, function(){});
+            shisha.smoke(path.join('test', 'invalidshishafile', '.smoke'), {domain: '127.0.0.1:9001'}, function(){});
             f = true;
         } catch (e) {
             assert.equal(e.message, 'Invalid config file');
@@ -48,7 +49,7 @@ describe('Shisha: smoke tests',function(){
 		if(server){
 			server.close();
 		}
-		server = http.createServer(mockserver('./test/mocks')).listen(9001);
+		server = http.createServer(mockserver(path.join('test', 'mocks'))).listen(9001);
 	});
 
 	after(function(){
@@ -56,7 +57,7 @@ describe('Shisha: smoke tests',function(){
 	});
 
     it('should be able to report when ever the smoke test failed', function(done){
-        shisha.smoke('./test/validshishafile-with-errors/.smoke', {domain: '127.0.0.1:9001'}, function(output){
+        shisha.smoke(path.join('test', 'validshishafile-with-errors', '.smoke'), {domain: '127.0.0.1:9001'}, function(output){
             var keys = Object.keys(output);
             assert.equal(output[keys].result, false);
             done();
@@ -64,7 +65,7 @@ describe('Shisha: smoke tests',function(){
     });
 
 	it('should be able to request all the urls from the shisha object', function(done){
-		shisha.smoke('./test/validshishafile/.smoke', {domain: '127.0.0.1:9001'}, function(output){
+		shisha.smoke(path.join('test', 'validshishafile', '.smoke'), {domain: '127.0.0.1:9001'}, function(output){
             for (var url in output) {
                 assert.equal(output[url].result, true);
             }

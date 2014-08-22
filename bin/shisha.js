@@ -4,6 +4,7 @@
 var argv = require('yargs').argv;
 var colors = require('colors');
 var shisha = require('./../src/index');
+var path = require('path');
 
 var locals = {};
 
@@ -11,7 +12,7 @@ for (var local in argv) {
     locals[local] = argv[local];
 }
 
-var shishaFile = argv.smoke || (process.cwd + '/.smoke');
+var shishaFile = argv.smoke || (path.join(process.cwd(), '.smoke'));
 
 try {
     var exitStatus = 0;
