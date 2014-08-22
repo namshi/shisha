@@ -2,7 +2,15 @@
   "name": "shisha",
   "version": "0.1.0",
   "description": "Simple smoke testing library in NodeJS",
-  "main": "shisha.js",
+  "main": "src/index.js",
+  "bin": {
+    "shisha": "bin/shisha.js"
+  },
+  "dependencies": {
+    "colors": "^0.6.2",
+    "http-https": "^1.0.0",
+    "yargs": "^1.2.5"
+  },
   "scripts": {
     "test": "mocha",
     "jshint": "jshint"
@@ -14,6 +22,7 @@
   "keywords": [
     "smoke-test"
   ],
+  "author": "Shidhin CR <shidhincr@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/namshi/shisha/issues"

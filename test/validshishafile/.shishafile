@@ -1,0 +1,3 @@
+http://{{domain}}/return-200 200
+http://{{domain}}/return-404 404
+http://{{domain}}/return-500 500
