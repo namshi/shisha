@@ -3,15 +3,14 @@ var url = require('url');
 var loader = require('./loader');
 var parser = require('./parser');
 
-var shisha = {
-    parse: function (shishaFile, locals) {
-        var rawData = loader.load(shishaFile);
+function parse(shishaFile, locals) {
+    return parser.parse(loader.load(shishaFile), locals);
+}
 
-        return parser.parse(rawData, locals);
-    },
+var shisha = {
     smoke: function (shishaFile, locals, callback) {
         var report = {},
-            data = shisha.parse(shishaFile, locals),
+            data = parse(shishaFile, locals),
             urlsCount = 0,
             addToReport = function (url, status) {
                 return function (res) {
