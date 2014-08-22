@@ -31,7 +31,6 @@ var shisha = {
 
         var report = [],
             data = parse(shishaFile, locals),
-            urlsCount = 0,
             /**
              * A callback function to the request that adds the formatted result
              * to the report object
@@ -63,7 +62,7 @@ var shisha = {
             processSmokeData = function (reqUrl, expectedStatus) {
                 var options = url.parse(reqUrl);
                 options.agent = false;
-                http.request(options, addToReport(reqUrl, expectedStatus, ++urlsCount)).end();
+                http.request(options, addToReport(reqUrl, expectedStatus)).end();
             };
 
         for (var i = 0; i < data.length; i++) {
