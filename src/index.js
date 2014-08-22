@@ -1,4 +1,4 @@
-var request = require('http-https');
+var http = require('http-https');
 var url = require('url');
 var loader = require('./loader');
 var parser = require('./parser');
@@ -57,7 +57,7 @@ var shisha = {
             processSmokeData = function (reqUrl, expectedStatus) {
                 var options = url.parse(reqUrl);
                 options.agent = false;
-                request.request(options, addToReport(reqUrl, expectedStatus, ++urlsCount)).end();
+                http.request(options, addToReport(reqUrl, expectedStatus, ++urlsCount)).end();
             };
 
         for (var i = 0; i < data.length; i++) {
