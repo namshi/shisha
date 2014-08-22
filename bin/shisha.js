@@ -37,5 +37,5 @@ try {
         process.exit(exitStatus);
 });
 } catch (e) {
-    console.log(e.message.error);
+    console.log(e.message.red);
 }
