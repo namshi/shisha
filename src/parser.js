@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 /**
  * Renders data with locals
  *
@@ -5,13 +7,16 @@
  * @param locals
  * @returns {*}
  */
-var render = function(data, locals) {
-    for(var local in locals) {
-        data = data.split('{{' + local+ '}}').join(locals[local]);
-    }
+var templating = (function(){
+    engine = _;
+    engine.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
 
-    return data;
-};
+    return {
+        render: function(content, locals){
+            return engine.template(content, locals);
+        }
+    };
+})();
 
 /**
  * Builds the parsed object from rawData in the following form:
@@ -24,15 +29,17 @@ var render = function(data, locals) {
  * @returns {{url: *, status: *}}
  */
 var buildParsedObject = function(rawData){
-    var linkStatusCode = rawData.split(' ');
+    var parts   = rawData.split(' ');
+    var status  = parts.pop();
+    var url     = parts.join('');
 
-    if (linkStatusCode.length !== 2) {
+    if (!url || !status) {
         throw new Error('Invalid config file');
     }
 
     return {
-        url: linkStatusCode[0],
-        status: linkStatusCode[1]
+        url: url,
+        status: status
     };
 };
 
@@ -61,7 +68,7 @@ var parser = {
         var parsedData = [];
 
         if (Object.keys(locals).length > 0) {
-            rawData = render(rawData, locals);
+            rawData = templating.render(rawData, locals);
         }
 
         rawData = rawData.split('\n');
@@ -71,7 +78,9 @@ var parser = {
         }
 
         for(var i = 0; i < rawData.length; i++) {
-            parsedData.push(buildParsedObject(rawData[i]));
+            if (rawData[i] !== '') {
+                parsedData.push(buildParsedObject(rawData[i]));
+            }
         }
 
         return parsedData;
