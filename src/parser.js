@@ -8,7 +8,7 @@ var _ = require('lodash');
  * @returns {*}
  */
 var templating = (function(){
-    engine = _;
+    var engine = _;
     engine.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
 
     return {
