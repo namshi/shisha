@@ -1,72 +1,52 @@
-var http = require('http-https');
-var url = require('url');
-var loader = require('./loader');
-var parser = require('./parser');
-
-/**
- * Loads and parses the config file (shishaFile)
- * Also passes locals to the loaded data
- *
- * @param shishaFile
- * @param locals
- * @returns {*}
- */
-function parse(shishaFile, locals) {
-    return parser.parse(loader.load(shishaFile), locals);
-}
+var http    = require('http-https');
+var url     = require('url');
+var loader  = require('./loader');
 
 var shisha = {
     /**
      * Main method to start the smoking process
      *
-     * @param shishaFile
+     * @param data
      * @param locals
      * @param callback
      */
-    smoke: function (shishaFile, locals, callback) {
+    smoke: function (data, locals, callback) {
+        var report = [];
+        
         if (!callback) {
             callback = locals;
             locals = {};
         }
 
-        var report = [],
-            data = parse(shishaFile, locals),
-            /**
-             * A callback function to the request that adds the formatted result
-             * to the report object
-             *
-             * @param url
-             * @param status
-             * @returns {Function}
-             */
-            addToReport = function (url, status) {
-                return function (res) {
-                    report.push({
-                        url: url,
-                        expected: status,
-                        actual: res.statusCode,
-                        result: status === res.statusCode.toString()
-                    });
+        resources = loader.load(data, locals);
+        
+        /**
+         * A callback function to the request that adds the formatted result
+         * to the report object
+         *
+         * @param url
+         * @param status
+         * @returns {Function}
+         */
+        addToReport = function (url, status) {
+            return function (res) {
+                report.push({
+                    url: url,
+                    expected: status,
+                    actual: res.statusCode,
+                    result: status == res.statusCode.toString()
+                });
 
-                    if (Object.keys(report).length === data.length) {
-                        callback(report);
-                    }
-                };
-            },
-            /**
-             * Performs the smoke test on a reqUrl
-             *
-             * @param reqUrl
-             * @param expectedStatus
-             */
-            processSmokeData = function (reqUrl, expectedStatus) {
-                var options = url.parse(reqUrl);
-                options.agent = false;
-                http.request(options, addToReport(reqUrl, expectedStatus)).end();
+                if (Object.keys(report).length === resources.length) {
+                    callback(report);
+                }
             };
-
-        for (var i = 0; i < data.length; i++) {
-            processSmokeData(data[i].url, data[i].status);
+        };
+        
+        for (var i = 0; i < resources.length; i++) {
+            var options = url.parse(resources[i].url);
+            options.agent = false;
+            http.request(options, addToReport(resources[i].url, resources[i].status)).end();
         }
     }
 };
