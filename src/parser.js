@@ -1,22 +1,4 @@
-var _ = require('lodash');
-
-/**
- * Renders data with locals
- *
- * @param data
- * @param locals
- * @returns {*}
- */
-var templating = (function(){
-    var engine = _;
-    engine.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
-
-    return {
-        render: function(content, locals){
-            return engine.template(content, locals);
-        }
-    };
-})();
+var templating = require('./templating');
 
 /**
  * Builds the parsed object from rawData in the following form:
@@ -45,8 +27,8 @@ var buildParsedObject = function(rawData){
 
 var parser = {
     /**
-     * Parses rawData by rendering locals and constructing
-     * the testing array
+     * Parses rawData constructing
+     * the testing list.
      *
      * [
      *      {
@@ -59,17 +41,16 @@ var parser = {
      *
      *      ....
      * ]
+     * 
+     * The rawData is basically a newline-separated
+     * string like:
+     * http://google.com 200\nhttp://gaaaagle.com 404...
      *
      * @param rawData
-     * @param locals
      * @returns {Array}
      */
-    parse: function(rawData, locals) {
+    parse: function(rawData) {
         var parsedData = [];
-
-        if (Object.keys(locals).length > 0) {
-            rawData = templating.render(rawData, locals);
-        }
 
         rawData = rawData.split('\n');
 

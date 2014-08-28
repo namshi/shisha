@@ -73,6 +73,45 @@ describe('Shisha: smoke tests',function(){
         });
 	});
 
+	it('should be able to accept an object made of URLs and status codes', function(done){
+	  var resources = {
+	    'http://{{domain}}/return-200': 200,
+      'http://{{domain}}/return-404': 404,
+      'http://{{domain}}/return-500': 500
+	  };
+	  
+		shisha.smoke(resources, {domain: '127.0.0.1:9001'}, function(output){
+            for (var url in output) {
+                assert.equal(output[url].result, true);
+            }
+            done();
+        });
+	});
+	
+	it('should be able to accept a list made of URLs and status codes', function(done){
+	  var resources = [
+	    {
+	      url: 'http://{{domain}}/return-200',
+	      status: 200
+	    },
+      {
+        url: 'http://{{domain}}/return-404',
+        status: 404
+      },
+      {
+        url: 'http://{{domain}}/return-500',
+        status: 500
+      }
+	  ];
+	  
+		shisha.smoke(resources, {domain: '127.0.0.1:9001'}, function(output){
+            for (var url in output) {
+                assert.equal(output[url].result, true);
+            }
+            done();
+        });
+	});
+
     it('should be able to request many urls from the shisha object', function(done){
         shisha.smoke(path.join('test', 'validshishafile', '.smoke50'), {domain: '127.0.0.1:9001'}, function(output){
             for (var url in output) {

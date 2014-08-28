@@ -51,16 +51,53 @@ and point shisha at them using the `--smoke` option `shisha --smoke ./my/other/p
 
 # Extending
 
-To be able to extend shisha, simply `var shisha = require('shisha');`
-after installing the module locally (`npm install --save shisha`)
+To be able to extend shisha, simply:
+
+``` javascript
+npm install --save shisha
+
+# then
+
+var shisha = require('shisha');
+```
 
 Then, you will have access to the `smoke` method, that accepts following arguments:
 
-* a path to the smoke file
+* a path to the smoke file or an object / list that defines your resources
 * a list of locals to replace in the smoke file: `{ domain1: 'example.org' }`
 * a callback that is triggered when the smoke tests are completed.
 
-If you do not have any locals, you can call `shisha.smoke(filePath, callback)`.
+``` javascript
+shisha.smoke(filePath, options, callback)
+
+# or, with an object:
+
+var resources = [{
+  url: 'http://google.com',
+  status: 200
+},{
+  url: 'http://ahhhhhhhhh.com',
+  status: 404
+}];
+
+shisha.smoke(resources, options, callback);
+
+# or you can even use another
+# data model:
+
+var resources = {
+  'http://google.com': 200,
+  'http://ahhhhh.com': 404,
+};
+
+shisha.smoke(resources, options, callback);
+```
+
+If you do not have any locals, you can omit them:
+
+``` javascript
+shisha.smoke(filePath, callback)
+```
 
 # Tests
 
