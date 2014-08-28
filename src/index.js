@@ -43,10 +43,17 @@ var shisha = {
             };
         };
         
-        for (var i = 0; i < resources.length; i++) {
-            var options = url.parse(resources[i].url);
+        var testResource = function (resource) {
+            var options = url.parse(resource.url);
             options.agent = false;
-            http.request(options, addToReport(resources[i].url, resources[i].status)).end();
+            http.request(options, addToReport(resource.url, resource.status)).end();
+        };
+        
+        for (var i = 0; i < resources.length; i++) {
+          testResource({
+            url: resources[i].url,
+            status: resources[i].status
+          });
         }
     }
 };
