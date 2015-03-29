@@ -6,7 +6,7 @@
 
 Shisha is a [smoke testing](http://en.wikipedia.org/wiki/Smoke_testing)
 library written in NodeJs. Simply provide a list of URLs and expected
-status codes and Shisha will take of testing!
+status codes and Shisha will take care of testing them!
 
 # Installation
 
