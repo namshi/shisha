@@ -44,7 +44,7 @@ var shisha = {
         };
         
         var testResource = function (resource) {
-            var options = url.parse(resource.url);
+            var options = url.parse(resource.url(locals));
             options.agent = false;
             http.request(options, addToReport(resource.url, resource.status)).end();
         };
