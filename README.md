@@ -109,6 +109,15 @@ npm test
 
 The build is continuously run on [travis](https://travis-ci.org/namshi/shisha).
 
+# On SSL/TLS self signed certificates
+
+In order for shisha to work properly with servers hosting self signed certificates (mainly for development purposes)
+The CLI accepts a `ca` argument referring to the location of a local copy of the server's self signed certificate.
+
+```
+shisha --ca /path/to/cert.pem
+```
+
 # Feedback
 
 Add an issue, open a PR, drop us an email! We would love to hear from you!

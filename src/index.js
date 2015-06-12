@@ -1,6 +1,7 @@
 var http    = require('http-https');
 var url     = require('url');
 var loader  = require('./loader');
+var fs      = require('fs');
 
 var shisha = {
     /**
@@ -9,17 +10,26 @@ var shisha = {
      * @param data
      * @param locals
      * @param callback
+     * @param options
      */
-    smoke: function (data, locals, callback) {
+    smoke: function (data, locals, callback, options) {
         var report = [];
-        
-        if (!callback) {
-            callback = locals;
-            locals = {};
+
+        if (!options) {
+            if (!callback) {
+                callback = locals;
+                locals = {};
+            }
+
+            if (typeof callback != 'function') {
+                options = callback;
+                callback = locals;
+                locals = {};
+            }
         }
 
         resources = loader.load(data, locals);
-        
+
         /**
          * A callback function to the request that adds the formatted result
          * to the report object
@@ -44,9 +54,14 @@ var shisha = {
         };
         
         var testResource = function (resource) {
-            var options = url.parse(resource.url(locals));
-            options.agent = false;
-            http.request(options, addToReport(resource.url, resource.status)).end();
+            var requestOptions = url.parse(resource.url(locals));
+            requestOptions.agent = false;
+
+            if (options && options.caPath) {
+                requestOptions.ca = [ fs.readFileSync(options.caPath) ];
+            }
+
+            http.request(requestOptions, addToReport(resource.url, resource.status)).end();
         };
         
         for (var i = 0; i < resources.length; i++) {

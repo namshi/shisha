@@ -14,6 +14,10 @@ for (var local in argv) {
 
 var shishaFile = argv.smoke || (path.join(process.cwd(), '.smoke'));
 
+var options = {
+    caPath: argv.ca || null
+};
+
 try {
     var exitStatus = 0;
 
@@ -35,7 +39,7 @@ try {
         });
 
         process.exit(exitStatus);
-});
+    }, options);
 } catch (e) {
     console.log(e.message.red);
 }
