@@ -4,7 +4,9 @@ var assert = require('assert');
 var mockserver = require('mockserver');
 var shisha = require('../src/index');
 var http = require('http');
+var https = require('https');
 var path = require('path');
+var fs      = require('fs');
 
 describe('Shisha',function(){
 	it('should be a valid node module', function(){
@@ -128,5 +130,47 @@ describe('Shisha: smoke tests',function(){
             }
             done();
         });
+    });
+});
+
+describe('Shisha: smoke tests',function(){
+    var server;
+    before(function(){
+        if(server){
+            server.close();
+        }
+
+        var options =
+        {
+            key: fs.readFileSync('./test/certs/key.pem'),
+            cert: fs.readFileSync('./test/certs/cert.pem')
+        };
+
+        server = https.createServer(options, function(req, res){
+            res.writeHead(200);
+            res.end("hello world\n");
+        }).listen(9001);
+    });
+
+    after(function(){
+        server.close();
+    });
+
+    it('should be able to connect to an HTTPS server with a self signed certificate with locals', function(done) {
+        shisha.smoke(path.join('test', 'validshishafile', '.smokehttps'), {domain: 'localhost:9001'}, function (output) {
+            for (var url in output) {
+                assert.equal(output[url].result, true);
+            }
+            done();
+        }, {caPath: './test/certs/cert.pem'});
+    });
+
+    it('should be able to connect to an HTTPS server with a self signed certificate without locals', function(done) {
+        shisha.smoke(path.join('test', 'validshishafile', '.smokehttpswolocals'), function (output) {
+            for (var url in output) {
+                assert.equal(output[url].result, true);
+            }
+            done();
+        }, {caPath: './test/certs/cert.pem'});
     });
 });
