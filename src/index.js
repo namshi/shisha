@@ -52,9 +52,9 @@ var shisha = {
                 }
             };
         };
-        
+
         var testResource = function (resource) {
-            var requestOptions = url.parse(resource.url(locals));
+            var requestOptions = url.parse(resource.url);
             requestOptions.agent = false;
 
             if (options && options.caPath) {
@@ -63,7 +63,7 @@ var shisha = {
 
             http.request(requestOptions, addToReport(resource.url, resource.status)).end();
         };
-        
+
         for (var i = 0; i < resources.length; i++) {
           testResource({
             url: resources[i].url,

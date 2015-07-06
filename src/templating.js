@@ -13,7 +13,8 @@ module.exports = (function(){
 
     return {
         render: function(content, locals){
-            return engine.template(content, locals);
+            var compiledTemplate = engine.template(content);
+            return compiledTemplate(locals);
         }
     };
 })();
