@@ -52,6 +52,7 @@ var parser = {
     parse: function(rawData) {
         var parsedData = [];
 
+        rawData = rawData.replace(/[\r]/g, ''); // Strip out the CR of CRLF ended files
         rawData = rawData.split('\n');
 
         if (rawData.length === 0) {

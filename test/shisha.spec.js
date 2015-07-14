@@ -3,6 +3,7 @@
 var assert = require('assert');
 var mockserver = require('mockserver');
 var shisha = require('../src/index');
+var parser = require('../src/parser');
 var http = require('http');
 var https = require('https');
 var path = require('path');
@@ -15,6 +16,16 @@ describe('Shisha',function(){
 });
 
 describe('Shisha: parser',function(){
+	
+	it('should handle CRLF style Windows line endings', function(){
+
+            var data1 = "url1 200\r\nurl2 404";
+            var data2 = "url1 200\nurl2 404";
+            var parsed1 = parser.parse(data1);
+            var parsed2 = parser.parse(data2);
+            assert.equal(JSON.stringify(parsed1), JSON.stringify(parsed2));
+       });
+	
 	it('should be throw an error if there is no .smoke', function(){
         var f = false;
 
