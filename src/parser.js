@@ -60,6 +60,7 @@ var parser = {
         }
 
         for(var i = 0; i < rawData.length; i++) {
+            if (rawData[i].indexOf('#') === 0) continue;    // ignore comment lines
             if (rawData[i] !== '') {
                 parsedData.push(buildParsedObject(rawData[i]));
             }

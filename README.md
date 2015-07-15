@@ -49,6 +49,12 @@ populated automatically!
 Even more! You can define **any** text file with a list of URLs and expected status codes
 and point shisha at them using the `--smoke` option `shisha --smoke ./my/other/project/.urls`
 
+Smoke File Comments: you can add hash style comments inline by starting the line with a hash like this:
+```
+# A comment  
+http://example.org/some-url 200
+```
+
 # Extending
 
 To be able to extend shisha, simply:
