@@ -26,6 +26,15 @@ describe('Shisha: parser',function(){
             assert.equal(JSON.stringify(parsed1), JSON.stringify(parsed2));
        });
 	
+       it('should ignore comment lines starting with #', function(){
+
+           var data1 = "url1 200\n\nurl2 404";
+           var data2 = "url1 200\n# a comment\nurl2 404";
+           var parsed1 = parser.parse(data1);
+           var parsed2 = parser.parse(data2);
+           assert.equal(JSON.stringify(parsed1), JSON.stringify(parsed2));
+       });
+    
 	it('should be throw an error if there is no .smoke', function(){
         var f = false;
 
